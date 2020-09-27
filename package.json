@@ -1,0 +1,15 @@
+{
+  "name": "vuepress",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/jh9hve/vuepress.git",
+  "author": "Yasuyoshi Takenaga <jh9hve@hotmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "vuepress": "^1.6.0"
+  },
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  }
+}
