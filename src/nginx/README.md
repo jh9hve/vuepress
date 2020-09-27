@@ -1,5 +1,7 @@
 # Nginx
 
+
+
 ## インストール
 ```
 sudo apt update
@@ -8,6 +10,8 @@ sudo apt install libnginx-mod-rtmp
 
 systemctl start nginx
 ```
+
+# rtmp flash用
 
 ## /etc/nginx/nginx.conf
 
@@ -57,5 +61,125 @@ rtmp {
 </script>
 
 </html>
+```
 
+# FLS MPEGDASH
+
+https://qiita.com/MMaru76/items/e2495a87b871bc9cbefe
+
+
+## nginx.conf
+
+```
+rtmp {
+   server {
+      listen 1935;
+      chunk_size 4096;
+
+      application live {
+         live on;
+         record off;
+
+         # HLSの記述欄
+         hls on;
+         hls_path /var/www/html/hls;
+         hls_fragment 10s;
+
+         # MEPG-DASHの記述欄
+         dash on;
+         dash_path /var/www/html/dash;
+         dash_fragment 10s;
+
+      }
+   }
+}
+
+```
+
+html の下に追加
+```
+    server {
+#        listen  80;
+#        include mime.types;
+#        default_type    application/octet-stream;
+#        server_name localhost;
+#        add_header  Access-Control-Allow-Origin *;
+
+        location /hls {
+            types {
+                 application/vnd.apple.mpegurl m3u8;
+            }
+            root /var/www/html/;
+        }
+        location /dash {
+            types {
+                 application/vnd.apple.mpegurl mpd;
+            }
+            root /var/www/html/;
+        }
+    }
+
+```
+
+## プレーヤー
+
+### HLS
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>MediaElement</title>
+  <!-- MediaElement style -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.css" />
+</head>
+
+<body>
+  <!-- MediaElement -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.js"></script>
+
+  <video id="player" width="640" height="360">
+</body>
+<script type="text/javascript">
+
+      var player = new MediaElementPlayer('player', {
+        success: function(mediaElement, originalNode) {
+          console.log("Player initialised");
+        }
+      });
+        player.setSrc("hls/live.m3u8");
+</script>
+
+</html>
+```
+
+### MPEG DASH うまくいってない
+```
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>MediaElement</title>
+  <!-- MediaElement style -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.css" />
+</head>
+
+<body>
+  <!-- MediaElements -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.js"></script>
+
+  <video id="player" width="640" height="360">
+</body>
+<script type="text/javascript">
+
+      var player = new MediaElementPlayer('player', {
+        success: function(mediaElement, originalNode) {
+          console.log("Player initialised");
+        }
+      });
+        player.setSrc("dash/live.mpd");
+</script>
+
+</html>
 ```
