@@ -1,3 +1,4 @@
 module.exports = {
-    dest: 'docs',
-  }
+  base: "/vuepress/",
+  dest: 'docs',
+}
