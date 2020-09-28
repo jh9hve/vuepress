@@ -63,7 +63,7 @@ rtmp {
 </html>
 ```
 
-# FLS MPEGDASH
+# HLS MPEGDASH
 
 https://qiita.com/MMaru76/items/e2495a87b871bc9cbefe
 
