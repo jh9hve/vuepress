@@ -13,6 +13,7 @@ module.exports = {
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Nginx', link: '/nginx/' },
+      { text: 'Pi', link: '/pi/' },
       { text: 'Yahoo', link: 'https://yahoo.co.jp/' }
     ],
   }
