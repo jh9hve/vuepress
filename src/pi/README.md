@@ -51,7 +51,18 @@ rtmp {
 }
 ```
 
-### プレーヤー
+### OBS
+
+配信のサーバーを　rtmp://192.168.11.81/live （192.168.11.81 のところは環境に合わせる）
+
+ストリームキーを　live
+
+
+### プレーヤー (FLASH)
+
+以下のファイルを live.html として /var/www/html に配置
+
+192.168.11.81 のところは環境に合わせる。
 
 ```
 <!DOCTYPE html>
@@ -83,3 +94,36 @@ rtmp {
 
 </html>
 ```
+
+
+### プレーヤー VLCメディアプレーヤー
+
+メディア　ネットワークストリームを開く　で次を指定（192.168.11.81の所は環境に合わせる）
+
+rtmp://192.168.11.81/live/live
+
+### stat
+
+apt でインストールした場合 stat がないので次のようにした。
+
+#### /etc/nginx/sites-available/default
+
+次を server { } の中の適当なところに追加（正規のやりかたは違うかも・・・）
+
+```
+        location /stat {
+                rtmp_stat all;
+                rtmp_stat_stylesheet /stat.xsl;
+        }
+
+        location /stat.xsl {
+                root html;
+        }
+
+```
+
+#### stat.xsl
+
+/usr/share/nginx/html/
+
+にコピー。（stat.xsl はdockerにあったものをusbメモリにて）
