@@ -15,7 +15,7 @@ Size:435 MB
 ```
 sudo raspi-config
 ```
-を立ち上げ、５番のInterfacing Options で SSH を有効に  
+を立ち上げ、５番（バージョンで変わるかも）のInterfacing Options で SSH を有効に  
 ホスト名も設定しても良いかも
 
 dhcpcd.conf　で有線LANを固定IPの設定にしたいのだが、
@@ -24,11 +24,17 @@ eth0 がインターフェース名にならず env(mac address) がインター
 の該当箇所を eth0 に書き換える。（NAME="eth0"）  
 再起動すると ssh で接続できるので以後はリモートで。
 
+（この現象は3Bで上記のOSのときに起こった。）
+
+追記：2020 12.02 Ver　のOSでRasPi4ではこの現象はおきずに eth0が普通に有効になった。
+
 ## nginx
 
 sudo apt install nginx
 
-sudo systemctl start nginx で起動確認
+sudo systemctl start nginx で起動確認（インストールしただけで起動されるようなのでこれは不要）
+
+
 
 ## rtmp
 
@@ -127,3 +133,165 @@ apt でインストールした場合 stat がないので次のようにした�
 /usr/share/nginx/html/
 
 にコピー。（stat.xsl はdockerにあったものをusbメモリにて）
+
+### swap を無効に　（micro sd を長持ちさせるため）
+
+
+```
+sudo systemctl stop dphys-swapfile
+sudo systemctl disable dphys-swapfile
+```
+再起動して　free　コマンドで確認すると swap が 0 になっている。
+
+### いらないログを出力しない。
+
+/etc/rsyslog.conf
+```
+#lpr.*                          -/var/log/lpr.log
+#mail.*                         -/var/log/mail.log
+
+#mail.info                      -/var/log/mail.info
+#mail.warn                      -/var/log/mail.warn
+#mail.err                       /var/log/mail.err
+
+#*.=debug;\
+#       auth,authpriv.none;\
+#       news.none;mail.none     -/var/log/debug
+```
+
+```
+sudo systemctl restart rsyslog
+```
+
+### hls mpeg_dash 用に ramディスクドライブを設定
+
+/etc/fstab　の最後に追加
+```
+tmpfs   /tmp    tmpfs   defaults,size=64m,noatime,mode=1777     0       0 
+```
+
+```
+sudo rm -rf /tmp
+```
+この後再起動。
+
+### /etc/nginx/nginx.conf　再び設定
+
+rtmp の部分を次のように変更
+
+```
+rtmp {
+   server {
+      listen 1935;
+      chunk_size 4096;
+
+      application live {
+         live on;
+         record off;
+      }
+      application hls {
+         live on;
+         record off;
+         hls on;
+         hls_path /tmp/hls;
+         hls_fragment 10s;
+      }
+      application dash {
+         live on;
+         record off;
+         dash on;
+         dash_path /tmp/dash;
+         dash_fragment 10s;
+      }
+
+   }
+}
+```
+
+### さらに設定追加
+
+#### /etc/nginx/sites-available/default
+
+はじめのほうで記述したものに更に追加。
+
+```
+        location /stat {
+                rtmp_stat all;
+                rtmp_stat_stylesheet /stat.xsl;
+        }
+
+        location /stat.xsl {
+                root html;
+        }
+        location /hls {
+            types {
+                 application/vnd.apple.mpegurl m3u8;
+            }
+            root /tmp/;
+        }
+        location /dash {
+            types {
+                 application/vnd.apple.mpegurl mpd;
+            }
+            root /tmp/;
+        }
+```
+
+
+### プレーヤー（HLS）
+以下のファイルを live_hls.html として /var/www/html に配置
+```
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>MediaElement</title>
+  <!-- MediaElement style -->
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelementplayer.css" />
+</head>
+
+<body>
+  <!-- MediaElement -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/mediaelement/4.2.9/mediaelement-and-player.js"></script>
+
+  <video id="player" width="640" height="360">
+</body>
+<script type="text/javascript">
+
+      var player = new MediaElementPlayer('player', {
+        success: function(mediaElement, originalNode) {
+          console.log("Player initialised");
+        }
+      });
+        player.setSrc("hls/live.m3u8");
+</script>
+
+</html>
+```
+
+### プレーヤー（MPEG DASH）
+以下のファイルを live_dash.html として /var/www/html に配置
+```
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RTMP to MPEG-DASH</title>
+  <meta charset="UTF-8">
+  <script src="https://cdn.dashjs.org/latest/dash.all.min.js"></script>
+  <style>
+    video {
+      width: 640px;
+      height: 360px;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <video data-dashjs-player autoplay src="dash/live.mpd" controls></video>
+  </div>
+</body>
+
+</html>
+```
