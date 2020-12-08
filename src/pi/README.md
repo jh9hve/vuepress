@@ -194,14 +194,12 @@ rtmp {
          record off;
          hls on;
          hls_path /tmp/hls;
-         hls_fragment 10s;
       }
       application dash {
          live on;
          record off;
          dash on;
          dash_path /tmp/dash;
-         dash_fragment 10s;
       }
 
    }
