@@ -14,7 +14,8 @@ module.exports = {
       { text: 'Home', link: '/' },
       { text: 'Nginx', link: '/nginx/' },
       { text: 'Pi', link: '/pi/' },
-      { text: 'KVM', link: '/kvm/' }
+      { text: 'KVM', link: '/kvm/' },
+      { text: 'docker', link: '/docker/' }
     ],
   }
 

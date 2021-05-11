@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>docker | VuePress 練習</title>
+    <meta name="generator" content="VuePress 1.6.0">
+    
+    <meta name="description" content="">
+    <link rel="preload" href="/vuepress/assets/css/0.styles.8dc6dd3d.css" as="style"><link rel="preload" href="/vuepress/assets/js/app.823a7837.js" as="script"><link rel="preload" href="/vuepress/assets/js/2.00ddf128.js" as="script"><link rel="preload" href="/vuepress/assets/js/8.011390f7.js" as="script"><link rel="prefetch" href="/vuepress/assets/js/10.b9045d18.js"><link rel="prefetch" href="/vuepress/assets/js/11.881add42.js"><link rel="prefetch" href="/vuepress/assets/js/3.5496910f.js"><link rel="prefetch" href="/vuepress/assets/js/4.b41e69dd.js"><link rel="prefetch" href="/vuepress/assets/js/5.5bc5eaa4.js"><link rel="prefetch" href="/vuepress/assets/js/6.e416f727.js"><link rel="prefetch" href="/vuepress/assets/js/7.7cbdbd79.js"><link rel="prefetch" href="/vuepress/assets/js/9.c10001ce.js">
+    <link rel="stylesheet" href="/vuepress/assets/css/0.styles.8dc6dd3d.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/vuepress/" class="home-link router-link-active"><!----> <span class="site-name">VuePress 練習</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/vuepress/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/vuepress/nginx/" class="nav-link">
+  Nginx
+</a></div><div class="nav-item"><a href="/vuepress/pi/" class="nav-link">
+  Pi
+</a></div><div class="nav-item"><a href="/vuepress/kvm/" class="nav-link">
+  KVM
+</a></div><div class="nav-item"><a href="/vuepress/docker/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  docker
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/vuepress/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/vuepress/nginx/" class="nav-link">
+  Nginx
+</a></div><div class="nav-item"><a href="/vuepress/pi/" class="nav-link">
+  Pi
+</a></div><div class="nav-item"><a href="/vuepress/kvm/" class="nav-link">
+  KVM
+</a></div><div class="nav-item"><a href="/vuepress/docker/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  docker
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>docker</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/vuepress/docker/#centos7-へのインストール" class="sidebar-link">CentOS7 へのインストール</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/vuepress/docker/#docker-2" class="sidebar-link">docker</a></li><li class="sidebar-sub-header"><a href="/vuepress/docker/#docker-compose" class="sidebar-link">docker-compose</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="docker"><a href="#docker" class="header-anchor">#</a> docker</h1> <h2 id="centos7-へのインストール"><a href="#centos7-へのインストール" class="header-anchor">#</a> CentOS7 へのインストール</h2> <h3 id="docker-2"><a href="#docker-2" class="header-anchor">#</a> docker</h3> <p>https://docs.docker.com/engine/install/centos/  を参考に</p> <p>Uninstall old versions 以前にインストールしていなければこれは必要なし。
+SET UP THE REPOSITORY　そして INSTALL DOCKER ENGINE　と行う。</p> <div class="language- extra-class"><pre class="language-text"><code>systemctl start docker
+systemctl enable docker
+</code></pre></div><p>usermod -aG docker (ユーザ名)　でそのユーザーがdockerを起動できる。</p> <h3 id="docker-compose"><a href="#docker-compose" class="header-anchor">#</a> docker-compose</h3> <p>https://docs.docker.com/compose/install/ を参照に次のコマンドで</p> <div class="language- extra-class"><pre class="language-text"><code>curl -L &quot;https://github.com/docker/compose/releases/download/1.29.1/docker-compose-$(uname -s)-(uname -m)&quot; -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/vuepress/assets/js/app.823a7837.js" defer></script><script src="/vuepress/assets/js/2.00ddf128.js" defer></script><script src="/vuepress/assets/js/8.011390f7.js" defer></script>
+  </body>
+</html>
