@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja-JP">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>KVM | VuePress 練習</title>
+    <meta name="generator" content="VuePress 1.6.0">
+    
+    <meta name="description" content="">
+    <link rel="preload" href="/vuepress/assets/css/0.styles.8dc6dd3d.css" as="style"><link rel="preload" href="/vuepress/assets/js/app.046f0bc8.js" as="script"><link rel="preload" href="/vuepress/assets/js/2.00ddf128.js" as="script"><link rel="preload" href="/vuepress/assets/js/8.c2cfa594.js" as="script"><link rel="prefetch" href="/vuepress/assets/js/10.93840669.js"><link rel="prefetch" href="/vuepress/assets/js/3.db1b9e5e.js"><link rel="prefetch" href="/vuepress/assets/js/4.b41e69dd.js"><link rel="prefetch" href="/vuepress/assets/js/5.5bc5eaa4.js"><link rel="prefetch" href="/vuepress/assets/js/6.e416f727.js"><link rel="prefetch" href="/vuepress/assets/js/7.7cbdbd79.js"><link rel="prefetch" href="/vuepress/assets/js/9.60628a35.js">
+    <link rel="stylesheet" href="/vuepress/assets/css/0.styles.8dc6dd3d.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/vuepress/" class="home-link router-link-active"><!----> <span class="site-name">VuePress 練習</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/vuepress/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/vuepress/nginx/" class="nav-link">
+  Nginx
+</a></div><div class="nav-item"><a href="/vuepress/pi/" class="nav-link">
+  Pi
+</a></div><div class="nav-item"><a href="/vuepress/kvm/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  KVM
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/vuepress/" class="nav-link">
+  Home
+</a></div><div class="nav-item"><a href="/vuepress/nginx/" class="nav-link">
+  Nginx
+</a></div><div class="nav-item"><a href="/vuepress/pi/" class="nav-link">
+  Pi
+</a></div><div class="nav-item"><a href="/vuepress/kvm/" aria-current="page" class="nav-link router-link-exact-active router-link-active">
+  KVM
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group depth-0"><p class="sidebar-heading open"><span>KVM</span> <!----></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/vuepress/kvm/#kvmのインストール" class="sidebar-link">KVMのインストール</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/vuepress/kvm/#ブリッジネットワークの設定" class="sidebar-link">ブリッジネットワークの設定</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/vuepress/kvm/#仮想マシン-ゲストマシン-の作成" class="sidebar-link">仮想マシン（ゲストマシン）の作成</a><ul class="sidebar-sub-headers"></ul></li><li><a href="/vuepress/kvm/#ゲストosの自動停止と自動起動" class="sidebar-link">ゲストOSの自動停止と自動起動</a><ul class="sidebar-sub-headers"></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="kvm"><a href="#kvm" class="header-anchor">#</a> KVM</h1> <p>BIOSの仮想化を有効に
+CentOS7をインストールして yum -y update を行い reboot</p> <h2 id="kvmのインストール"><a href="#kvmのインストール" class="header-anchor">#</a> KVMのインストール</h2> <div class="language- extra-class"><pre class="language-text"><code>yum install qemu-kvm
+yum install libvirt
+yum install virt-install
+
+systemctl start libvirtd
+systemctl enable libvirtd
+</code></pre></div><h2 id="ブリッジネットワークの設定"><a href="#ブリッジネットワークの設定" class="header-anchor">#</a> ブリッジネットワークの設定</h2> <div class="language- extra-class"><pre class="language-text"><code># nmcli con
+NAME    UUID                                  TYPE      DEVICE 
+enp2s0  a8a9908c-bc06-415d-9482-16b9983026cd  ethernet  enp2s0 
+virbr0  5e862296-f6fa-4d92-850e-69373f98964e  bridge    virbr0
+</code></pre></div><p>上の enp2s0 と下の IPアドレスは、環境に合わせる。</p> <div class="language- extra-class"><pre class="language-text"><code>nmcli con add type bridge ifname br0
+nmcli con modify bridge-br0 bridge.stp no
+nmcli con modify bridge-br0 ipv4.method manual ipv4.address &quot;192.168.11.78/24&quot; ipv4.gateway &quot;192.168.11.1&quot;
+nmcli con add type bridge-slave ifname enp2s0 master bridge-br0
+nmcli con del enp2s0; systemctl restart network
+</code></pre></div><p>上の最後の行を実行すると SSH の場合、一旦切れるがしばらく待つと再接続するようだ。しないようなら実機のコンソールで。</p> <h2 id="仮想マシン-ゲストマシン-の作成"><a href="#仮想マシン-ゲストマシン-の作成" class="header-anchor">#</a> 仮想マシン（ゲストマシン）の作成</h2> <p>scp CentOS-7-x86_64-Minimal-2009.iso 192.168.11.90:~/　
+でイメージをコピーして /kvm/iso に移動（ディレクトリ作ってから）、または直接 wget あたりで取ってくる。</p> <p>/kvm/images ディレクトリも作り、
+chown -R qemu:qemu kvm</p> <p>その後</p> <div class="language- extra-class"><pre class="language-text"><code>virt-install \
+--name=cent7 \
+--os-variant centos7.0 \
+--location=/kvm/iso/CentOS-7-x86_64-Minimal-2009.iso \
+--disk path=/kvm/images/cent7.qcow2,size=10,format=qcow2 \
+--vcpus=1 --ram=2048 \
+--network bridge=br0 \
+--graphics none \
+--extra-args=&quot;console=tty0 console=ttyS0,115200n8&quot;
+</code></pre></div><p>ゲストマシンを破棄するときは、</p> <div class="language- extra-class"><pre class="language-text"><code>virsh undefine cent7
+rm /kvm/images/centos.qcow2
+</code></pre></div><h2 id="ゲストosの自動停止と自動起動"><a href="#ゲストosの自動停止と自動起動" class="header-anchor">#</a> ゲストOSの自動停止と自動起動</h2> <p>yum install libvirt-client だが、すでに以前のパッケージで必要なためインスト済みのようだ。</p> <p>vi /etc/sysconfig/libvirt-guests で次のように変更（該当の行のコメントをはずす）。</p> <div class="language- extra-class"><pre class="language-text"><code>ON_BOOT=start
+ON_SHUTDOWN=suspend
+</code></pre></div><p>そして</p> <div class="language- extra-class"><pre class="language-text"><code>systemctl start libvirt-guests
+systemctl enable libvirt-guests
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <!----> </main></div><div class="global-ui"></div></div>
+    <script src="/vuepress/assets/js/app.046f0bc8.js" defer></script><script src="/vuepress/assets/js/2.00ddf128.js" defer></script><script src="/vuepress/assets/js/8.c2cfa594.js" defer></script>
+  </body>
+</html>

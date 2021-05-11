@@ -14,7 +14,7 @@ module.exports = {
       { text: 'Home', link: '/' },
       { text: 'Nginx', link: '/nginx/' },
       { text: 'Pi', link: '/pi/' },
-      { text: 'Yahoo', link: 'https://yahoo.co.jp/' }
+      { text: 'KVM', link: '/kvm/' }
     ],
   }
 
